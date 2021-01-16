@@ -1,0 +1,1 @@
+1.mailtrap: para enviar emails, se utiliza en la parte de desarrollo, para simular el envio de los emails
