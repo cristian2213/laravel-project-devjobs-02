@@ -1,1 +1,3 @@
-1.mailtrap: para enviar emails, se utiliza en la parte de desarrollo, para simular el envio de los emails
+1.mailtrap: para enviar emails, se utiliza en la parte de desarrollo, para simular el envio de los emails, cuando se desplegue la aplicacion el Servidor SMTP en el hosting se debe configurar, la otra opcion es contratar un servidor exclusivamente para el envio de correo
+
+2. SMTP: es el protocolo de transferencia de emails

@@ -13,7 +13,8 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // debe estar autenticado y verificado el email
+        $this->middleware(['auth', 'verified']);
     }
 
     /**

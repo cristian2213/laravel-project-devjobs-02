@@ -18,6 +18,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]); // to-do lo que este protegido el usuario lo debe verificar primero
 
 Route::get('/home', 'HomeController@index')->name('home');
