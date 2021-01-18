@@ -21,3 +21,8 @@ Route::get('/', function () {
 Auth::routes(['verify' => true]); // to-do lo que este protegido el usuario lo debe verificar primero
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+//***************** Vacantes **************************/
+Route::get('/vacantes', 'VacanteController@index')->name('vacantes.index');
+
+Route::get('/vacantes/create', 'VacanteController@create')->name('vacantes.create');

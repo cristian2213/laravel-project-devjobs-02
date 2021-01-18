@@ -46,9 +46,10 @@
                         @else
 
                             <span class="text-gray-300 text-ms pr-4"> {{ Auth::user()->name }}</span>
-                            <a class="dropdown-item no-underline hover:text-gray-300 text-white" href="{{ route('logout') }}"
+                            <a class="dropdown-item no-underline hover:text-gray-300 text-white"
+                                href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
-                                                                                                                                                                                                                                 document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                         document.getElementById('logout-form').submit();">
                                 {{ __('Logout') }}
                             </a>
 
@@ -61,7 +62,13 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <div class="bg-gray-700">
+            <nav class="container mx-auto flex space-x-1">
+                @yield('navegacion')
+            </nav>
+        </div>
+
+        <main class="py-4 container mx-auto">
             @yield('content')
         </main>
     </div>
