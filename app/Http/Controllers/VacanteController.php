@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Skill;
+use App\Salario;
 use App\Vacante;
 use App\Categoria;
 use App\Ubicacion;
 use App\Experiencia;
-use App\Salario;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+
 
 class VacanteController extends Controller
 {
@@ -41,12 +44,14 @@ class VacanteController extends Controller
         $experiencias = Experiencia::all();
         $ubicaciones = Ubicacion::all();
         $salarios = Salario::all();
+        $skills = Skill::all();
 
         return view('vacantes.create')
             ->with('categorias', $categorias)
             ->with('experiencias', $experiencias)
             ->with('ubicaciones', $ubicaciones)
-            ->with('salarios', $salarios);
+            ->with('salarios', $salarios)
+            ->with('skills', $skills);
     }
 
     /**
@@ -57,7 +62,21 @@ class VacanteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //return dd($request->all());
+
+        // validacion de los campos
+        $data = $request->validate([
+            'titulo' => 'required|min:8',
+            'categoria' => 'required',
+            'experiencia' => 'required',
+            'ubicacion' => 'required',
+            'salario' => 'required',
+            'descripcion' => 'required|min:50',
+            'imagen' => 'required',
+            'skills' => 'required'
+        ]);
+
+        return "entro";
     }
 
     /**
@@ -103,5 +122,33 @@ class VacanteController extends Controller
     public function destroy(Vacante $vacante)
     {
         //
+    }
+
+    // metodo para guardar la imagen en el servidor
+    public function imagen(Request $request)
+    {
+
+        $imagen = $request->file('file'); // acceder a la imagen
+
+        $nombreImagen = time() . '.' . $imagen->extension(); // se genera el nombre de la imagen de acuerdo a la hora que se subio la imagen
+
+        $imagen->move(public_path('storage/vacantes'), $nombreImagen); // luego se mueve el archivo a la carpeta privada y se renombra con el nombre basado en la hora que se creo
+
+        return response()->json(['correcto' => $nombreImagen]);
+    }
+
+    public function borrarImagen(Request $request)
+    {
+        // validar si es un request ajax
+        if ($request->ajax()) {
+            $imagen = $request->get('imagen');
+
+            // antes de eliminar algo en el servidor se debe primero verificar que exista el archivo
+            if (File::exists('storage/vacantes/' . $imagen)) {
+                File::delete('storage/vacantes/' . $imagen);
+            }
+
+            return response('Imagen Eliminada', 200);
+        }
     }
 }

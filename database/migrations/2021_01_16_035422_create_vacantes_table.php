@@ -38,13 +38,26 @@ class CreateVacantesTable extends Migration
             $table->timestamps();
         });
 
+        Schema::create('skills', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre');
+            $table->timestamps();
+        });
+
         Schema::create('vacantes', function (Blueprint $table) {
             $table->id();
+            $table->text('descripcion');
             // elimina la llave FK y el registro primario
             $table->foreignId('categoria_id')->references('id')->on('categorias')->onDelete('cascade');
+
             $table->foreignId('experiencia_id')->references('id')->on('experiencias')->onDelete('cascade');
+
             $table->foreignId('ubicacion_id')->references('id')->on('ubicacions')->onDelete('cascade');
+
             $table->foreignId('salario_id')->references('id')->on('salarios')->onDelete('cascade');
+
+            $table->foreignId('skill_id')->references('id')->on('skills')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
@@ -62,5 +75,6 @@ class CreateVacantesTable extends Migration
         Schema::dropIfExists('categorias');
         Schema::dropIfExists('ubicacions');
         Schema::dropIfExists('salarios');
+        Schema::dropIfExists('skills');
     }
 }
