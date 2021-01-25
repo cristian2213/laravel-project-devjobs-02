@@ -2,7 +2,6 @@ const mix = require("laravel-mix");
 
 // importing tailwind mix
 require("laravel-mix-tailwind");
-
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -15,5 +14,8 @@ require("laravel-mix-tailwind");
  */
 
 mix.js("resources/js/app.js", "public/js")
+    .autoload({
+        jquery: ["$", "window.jquery", "jquery"]
+    })
     .sass("resources/sass/app.scss", "public/css")
     .tailwind();

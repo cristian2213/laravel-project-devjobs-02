@@ -3,3 +3,15 @@
 2. SMTP: es el protocolo de transferencia de emails
 
 3. en el modelo User de implementa la validacion de email, luego en las rutas se debe declarar la verificacion
+
+4. para crear una notificacion  make:notification NameNotification
+
+5. notifications:table Para crear notificaciones tipo base de datos:
+
+$user->notifications => para acceder a las notificaciones tanto leidas como no leidad
+
+$user->unreadNotifications => acceder a las notificacines que no estan leidas
+
+$user->unreadNotifications->count() => conocer la cantidad de notificaciones
+
+$user->notifications[0]->markAsRead(); => para marcar la notificacion como leida

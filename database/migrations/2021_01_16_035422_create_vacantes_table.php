@@ -46,8 +46,13 @@ class CreateVacantesTable extends Migration
 
         Schema::create('vacantes', function (Blueprint $table) {
             $table->id();
+            $table->string('titulo');
+            $table->string('imagen');
             $table->text('descripcion');
+            $table->text('skills');
+            $table->boolean('activa')->default(true);
             // elimina la llave FK y el registro primario
+
             $table->foreignId('categoria_id')->references('id')->on('categorias')->onDelete('cascade');
 
             $table->foreignId('experiencia_id')->references('id')->on('experiencias')->onDelete('cascade');
@@ -56,8 +61,7 @@ class CreateVacantesTable extends Migration
 
             $table->foreignId('salario_id')->references('id')->on('salarios')->onDelete('cascade');
 
-            $table->foreignId('skill_id')->references('id')->on('skills')->onDelete('cascade');
-
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

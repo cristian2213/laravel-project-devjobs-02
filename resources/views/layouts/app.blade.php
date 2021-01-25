@@ -25,17 +25,28 @@
 </head>
 
 <body class="bg-gray-200 min-h-screen leading-none">
+
+    {{-- para sacar el mensaje de un with --}}
+    @if (session('estado'))
+        <div class="bg-teal-500 p-8 text-center text-white font-bold uppercase">
+            {{ session('estado') }}
+        </div>
+    @endif
+
     <div id="app">
         <nav class="bg-gray-800 shadow-md py-4">
-            <div class="container mx-auto md:px-0">
+            <div class="container mx-auto md:px-0 w-10/12 ">
                 <div class="flex items-center justify-around">
                     <a class="text-2xl text-white" href="{{ url('/') }}">
+
+                        {{-- para obtener las variables de entorno
+                        --}}
                         {{ config('app.name', 'Laravel') }}
                     </a>
 
                     <nav class="flex-1 text-right">
 
-                        <!-- Authentication Links -->
+                        <!-- Authentication Links (invidato = guest) -->
                         @guest
                             <a class="text-white no-underline hover:underline hover:text-gray-300 p-3"
                                 href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -49,10 +60,18 @@
                         @else
 
                             <span class="text-gray-300 text-ms pr-4"> {{ Auth::user()->name }}</span>
+
+                            <a href="{{ route('notificaciones') }}"
+                                class="bg-teal-500 rounded-full mr-4 px-3 font-bold text-sm text-white text-center">
+                                {{-- obtener usuario autenticado y contar las notificaciones
+                                que no ha leido --}}
+                                {{ Auth::user()->unreadNotifications->count() }}
+                            </a>
+
                             <a class="dropdown-item no-underline hover:text-gray-300 text-white"
                                 href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
-                                                                                                                                                                                                                                                                                     document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                                                                                                                                                                     document.getElementById('logout-form').submit();">
                                 {{ __('Logout') }}
                             </a>
 
@@ -66,12 +85,12 @@
         </nav>
 
         <div class="bg-gray-700">
-            <nav class="container mx-auto flex space-x-1">
+            <nav class="container w-10/12 mx-auto flex space-x-1">
                 @yield('navegacion')
             </nav>
         </div>
 
-        <main class="py-4 container mx-auto">
+        <main class="mt-10 w-10/12 container mx-auto">
             @yield('content')
         </main>
     </div>

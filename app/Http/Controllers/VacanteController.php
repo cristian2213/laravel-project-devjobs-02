@@ -15,13 +15,6 @@ use Illuminate\Support\Facades\File;
 
 class VacanteController extends Controller
 {
-
-    public function __construct()
-    {
-        // rutas protegidas
-        $this->middleware(['auth', 'verified']);
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -29,7 +22,10 @@ class VacanteController extends Controller
      */
     public function index()
     {
-        return view('vacantes.index');
+        $vacantes = Vacante::where('user_id', auth()->user()->id)->simplePaginate(5);
+
+        return view('vacantes.index')
+            ->with('vacantes', $vacantes);
     }
 
     /**
@@ -67,16 +63,28 @@ class VacanteController extends Controller
         // validacion de los campos
         $data = $request->validate([
             'titulo' => 'required|min:8',
+            'imagen' => 'required',
+            'descripcion' => 'required|min:50',
+            'skills' => 'required',
             'categoria' => 'required',
             'experiencia' => 'required',
             'ubicacion' => 'required',
-            'salario' => 'required',
-            'descripcion' => 'required|min:50',
-            'imagen' => 'required',
-            'skills' => 'required'
+            'salario' => 'required'
         ]);
 
-        return "entro";
+        // guardar en la Db
+        auth()->user()->vacantes()->create([
+            'titulo' => $data['titulo'],
+            'imagen' => $data['imagen'],
+            'descripcion' => $data['descripcion'],
+            'skills' => $data['skills'],
+            'categoria_id' => $data['categoria'],
+            'experiencia_id' => $data['experiencia'],
+            'ubicacion_id' => $data['ubicacion'],
+            'salario_id' => $data['salario']
+        ]);
+
+        return redirect()->action('VacanteController@index');
     }
 
     /**
@@ -87,7 +95,8 @@ class VacanteController extends Controller
      */
     public function show(Vacante $vacante)
     {
-        //
+        return view('vacantes.show')
+            ->with('vacante', $vacante);
     }
 
     /**
@@ -98,7 +107,16 @@ class VacanteController extends Controller
      */
     public function edit(Vacante $vacante)
     {
-        //
+        // para que un usuario no pueda editar la vacante de otro usuario
+        $this->authorize('view', $vacante);
+
+        $categorias = Categoria::all();
+        $experiencias = Experiencia::all();
+        $ubicaciones = Ubicacion::all();
+        $salarios = Salario::all();
+        $skills = Skill::all();
+
+        return view('vacantes.edit', compact('vacante', 'categorias', 'experiencias', 'ubicaciones', 'salarios', 'skills'));
     }
 
     /**
@@ -110,7 +128,31 @@ class VacanteController extends Controller
      */
     public function update(Request $request, Vacante $vacante)
     {
-        //
+        $this->authorize('update', $vacante);
+
+        $data = $request->validate([
+            'titulo' => 'required|min:8',
+            'imagen' => 'required',
+            'descripcion' => 'required|min:50',
+            'skills' => 'required',
+            'categoria' => 'required',
+            'experiencia' => 'required',
+            'ubicacion' => 'required',
+            'salario' => 'required'
+        ]);
+
+
+        $vacante->titulo = $data['titulo'];
+        $vacante->imagen = $data['imagen'];
+        $vacante->descripcion = $data['descripcion'];
+        $vacante->skills = $data['skills'];
+        $vacante->categoria_id = $data['categoria'];
+        $vacante->experiencia_id = $data['experiencia'];
+        $vacante->ubicacion_id = $data['ubicacion'];
+        $vacante->salario_id = $data['salario'];
+        $vacante->save();
+
+        return redirect()->action('VacanteController@index');
     }
 
     /**
@@ -121,7 +163,11 @@ class VacanteController extends Controller
      */
     public function destroy(Vacante $vacante)
     {
-        //
+        $this->authorize('delete', $vacante);
+
+        //Vacante::destroy($vacante);
+        $vacante->delete();
+        return response()->json(["mensaje" => "Se elimino la vacante {$vacante->titulo}"]);
     }
 
     // metodo para guardar la imagen en el servidor
@@ -149,6 +195,16 @@ class VacanteController extends Controller
             }
 
             return response('Imagen Eliminada', 200);
+        }
+    }
+
+    public function estado(Request $request, Vacante $vacante)
+    {
+        // recordar responder siempre en formato json
+        if ($request->ajax()) {
+            $vacante->activa = $request->estado;
+            $vacante->save();
+            return response()->json(['status' => true]);
         }
     }
 }
