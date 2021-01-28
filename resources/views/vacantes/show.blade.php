@@ -64,7 +64,11 @@
             </div>
         </div>
 
-        @include('ui.contacto')
+        {{-- si la vacante no esta activa, se puede ver pero no se muestra el formulario
+        --}}
+        @if ($vacante->activa === 1)
+            @include('ui.contacto')
+        @endif
     </div>
 
 @endsection

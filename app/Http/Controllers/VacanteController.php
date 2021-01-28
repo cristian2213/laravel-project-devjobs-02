@@ -22,7 +22,7 @@ class VacanteController extends Controller
      */
     public function index()
     {
-        $vacantes = Vacante::where('user_id', auth()->user()->id)->simplePaginate(5);
+        $vacantes = Vacante::latest()->where('user_id', auth()->user()->id)->simplePaginate(5);
 
         return view('vacantes.index')
             ->with('vacantes', $vacantes);
@@ -95,6 +95,9 @@ class VacanteController extends Controller
      */
     public function show(Vacante $vacante)
     {
+        // si la vacante no esta activa, entonces no mostrarla
+        //if ($vacante->activa === 0) return abort(404);
+
         return view('vacantes.show')
             ->with('vacante', $vacante);
     }
@@ -206,5 +209,35 @@ class VacanteController extends Controller
             $vacante->save();
             return response()->json(['status' => true]);
         }
+    }
+
+    public function buscar(Request $request)
+    {
+        $data = request()->validate([
+            'categoria' => 'required',
+            'ubicacion' => 'required',
+        ]);
+
+        $categoriaId = $data['categoria'];
+        $ubicacionId = $data['ubicacion'];
+
+        // doble where = AND en SQL
+        //$vacantes = Vacante::latest()
+        //    ->where('categoria_id', $categoriaId)
+        //    ->where('ubicacion_id', $ubicacionId)
+        //    ->get();
+
+        // Es lo mismo que el doble where
+        $vacantes = Vacante::latest()->where([
+            'categoria_id' => $categoriaId,
+            'ubicacion_id' => $ubicacionId
+        ])->get();
+
+        return view('buscar.index', compact('vacantes'));
+    }
+
+    public function resultados()
+    {
+        return 'All nice';
     }
 }

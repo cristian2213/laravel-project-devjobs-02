@@ -40,8 +40,15 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/notificaciones', 'NotificacionesController')->name('notificaciones');
 });
 
+//**************************** Categorias ************** */
+Route::get('/categorias/{categoria}', 'CategoriaController@show')->name('categorias.show');
+
 //**************** Vacantes rutas sin autenticacion ******/
+Route::post('/busqueda/buscar', 'VacanteController@buscar')->name('vacantes.buscar');
+Route::get('/busqueda/buscar', 'VacanteController@resultados')->name('vacantes.resultados'); // el order de las rutas es indispensable, siempre colocar los comodines al final de las rutas
+
 Route::get('/vacantes/{vacante}', 'VacanteController@show')->name('vacantes.show');
+
 
 //******************** Candidato *****************/
 Route::get('/candidatos/{id}', 'CandidatoController@index')->name('candidatos.index');

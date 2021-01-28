@@ -15,8 +15,8 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
     @yield('styles')
 
@@ -71,7 +71,7 @@
                             <a class="dropdown-item no-underline hover:text-gray-300 text-white"
                                 href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
-                                                                                                                                                                                                                                                                                                                                                                                                                     document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                                                                                                                                                                                 document.getElementById('logout-form').submit();">
                                 {{ __('Logout') }}
                             </a>
 
@@ -85,7 +85,7 @@
         </nav>
 
         <div class="bg-gray-700">
-            <nav class="container w-10/12 mx-auto flex space-x-1">
+            <nav class="container w-10/12 mx-auto flex flex-col text-center md:flex-row space-x-1">
                 @yield('navegacion')
             </nav>
         </div>
